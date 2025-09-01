@@ -76,6 +76,7 @@ class MOPSO:
         self.x = self.swarm.x  # 位置
         self.v = self.swarm.v  # 速度
         self.x_init = self.x.copy()  # 初始处置
+        self.y_init = self._get_y(self.x_init)  # 初始目标值(m, n_obj)
         self.archive: np.ndarray | None = None  # 外部存档(位置)(*, n)
         self.archive_y: np.ndarray | None = None  # 外部存档(目标值)(*, n_obj)
         self.y = self._get_y(self.x)  # 目标值(m, n_obj)
@@ -261,6 +262,7 @@ class MOPSO:
         plt.title('MOPSO Optimization')
         plt.legend()
         plt.grid()
+        plt.tight_layout()
         plt.show()
 
     def plot_init_swarm2d(self, num: int):
