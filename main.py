@@ -21,7 +21,7 @@ if __name__ == "__main__":
         [0, 1],
         [0, 1]
     ])  # 位置边界(m, n)
-    pso = MOPSO(
+    mopso = MOPSO(
         objectives=[f1, f2],
         m=100,
         n=2,
@@ -29,5 +29,5 @@ if __name__ == "__main__":
         max_iter=100,
         archive_size=20,
     )
-    pso.optimize()
-    pso.visualize2d()
+    mopso.optimize()
+    mopso.visualize2d()

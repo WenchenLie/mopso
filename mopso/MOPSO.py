@@ -173,8 +173,12 @@ class MOPSO:
             self.archive = self.archive[idx[:self.archive_size]]
             self.archive_y = self._get_y(self.archive)
 
-    def optimize(self):
-        """开始优化"""
+    def optimize(self) -> tuple[np.ndarray, np.ndarray]:
+        """进行优化
+
+        Returns:
+            tuple[np.ndarray, np.ndarray]: Pareto前沿的位置，Pareto前沿的目标值
+        """
         for gen in range(self.max_iter):
             w = self.w1 - (self.w1 - self.w2) * gen / self.max_iter  # 自适应惯性权重
             gbest = self._get_gbest()  # 全局最优位置(m, n)
@@ -204,6 +208,10 @@ class MOPSO:
 
             if (gen + 1) % 10 == 0 or gen + 1 == self.max_iter:
                 print(f"Iter {gen + 1}/{self.max_iter}, Archive Size: {len(self.archive) if self.archive is not None else 0}")
+
+        pareto_x = self.archive
+        pareto_y = self.archive_y
+        return pareto_x, pareto_y
 
     @staticmethod
     def _crowding_distance(y: np.ndarray) -> np.ndarray:
@@ -251,6 +259,27 @@ class MOPSO:
         plt.xlabel('Objective 1')
         plt.ylabel('Objective 2')
         plt.title('MOPSO Optimization')
+        plt.legend()
+        plt.grid()
+        plt.show()
+
+    def plot_init_swarm2d(self, num: int):
+        """生成二维初始种群位置图(仅限于二维问题)
+
+        Args:
+            num (int): 粒子数量
+        """
+        if self.n_obj != 2:
+            print('只能可视化二维目标空间')
+            return
+        import matplotlib.pyplot as plt
+        swarm = _Swarm(num, self.n, self.bounds)  # 初始化种群(仅用于绘图)
+        x = swarm.x
+        y = self._get_y(x)
+        plt.scatter(y[:, 0], y[:, 1], c='red', alpha=0.5, label='Particles')
+        plt.xlabel('Objective 1')
+        plt.ylabel('Objective 2')
+        plt.title(f'Initial Swarm (m = {num})')
         plt.legend()
         plt.grid()
         plt.show()
